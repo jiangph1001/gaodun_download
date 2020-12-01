@@ -55,6 +55,7 @@ def read_m3u8(m3u8,key,filename):
 
 if __name__ == '__main__': 
     har_list = os.listdir('har/')
+    os.system("mkdir download")
     print(har_list)
     pool = multiprocessing.Pool(processes = 3)
     for har in har_list:
