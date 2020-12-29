@@ -44,13 +44,13 @@ def read_m3u8(m3u8,key,filename):
                 print(e)
                 print("请求出错，需要重新下载")
                 writer.close()
-                os.system("rm -r " + ts_name)
+                os.system("rm -f" + ts_name)
                 return 
             writer.write(cryptor.decrypt(res.content))
     print("{} finish download".format(filename))
     writer.close()
-    os.system("mv {} download/{}.ts".format(ts_name,filename))
-    os.system("rm -r " + 'har/'+har)
+    os.system("mv '{}' 'download/{}.ts'".format(ts_name,filename))
+    os.system("rm -f " + '"har/' + har + '"')
     return 0
 
 if __name__ == '__main__': 
