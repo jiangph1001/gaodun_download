@@ -6,6 +6,7 @@ from binascii import b2a_hex, a2b_hex
 import multiprocessing
 import uuid,json
 import base64
+
 def parse_har(har_file_name):
     file = open(har_file_name,'r')
     content = file.read()
@@ -19,7 +20,11 @@ def parse_har(har_file_name):
                 if "src/get?id=" in req['request']['url']:
                     m3u8 = req['response']['content']['text']
                 if "authorize?id=" in req['request']['url']:
-                    IV = req['response']['content']['text']
+                    if req['response']['content']['mimeType'] == 'text/plain':
+                        #IV = base64.b64encode(bytes(req['response']['content']['text'].encode('utf-8'))).decode('utf-8')
+                        raise Exception("Key error, no solution for the moment")
+                    else: 
+                        IV = req['response']['content']['text']
     file.close()
     return m3u8,IV
 
@@ -63,8 +68,8 @@ if __name__ == '__main__':
         print(file_without_suffix)
         try:
             m3u8,key = parse_har('har/'+har)
-        except:
-            print("{} parse error".format(har))
+        except Exception as e:
+            print("【 {} 】 parse error :{}".format(har,e))
         else:
             pool.apply_async(read_m3u8,(m3u8,key,file_without_suffix))
     pool.close()
